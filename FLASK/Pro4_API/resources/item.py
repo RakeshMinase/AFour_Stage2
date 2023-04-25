@@ -12,6 +12,7 @@ blp = Blueprint("items", __name__, description="Operations on items")
 
 @blp.route("/item")
 class ItemList(MethodView):
+    @jwt_required()
     @blp.response(200, ItemSchema(many=True))
     def get(self):
         return ItemModel.query.all()

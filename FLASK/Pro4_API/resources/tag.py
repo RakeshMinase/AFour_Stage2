@@ -41,11 +41,13 @@ class TagsInStore(MethodView):
 @blp.route("/tag/<string:tag_id>")
 @jwt_required()
 class Tag(MethodView):
+    @jwt_required()
     @blp.response(200, TagSchema)
     def get(self, tag_id):
         tag = TagModel.query.get_or_404(tag_id)
         return tag
 
+    @jwt_required()
     @blp.response(
         202,
         description="Deletes a tag if no item is tagged with it",

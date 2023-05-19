@@ -15,7 +15,7 @@ blp = Blueprint("tasks", __name__, description="Operations on tasks")
 @blp.route("/tasks")
 class TaskList(MethodView):
     @jwt_required()
-    @blp.response(200, TaskSchema(many=True))
+    @blp.response(  , TaskSchema(many=True))
     def get(self):
         # print(LOGINUSERID[0])
         # return TaskModel.query.all()

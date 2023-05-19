@@ -1,6 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from schemas import UserSchema
+# import math
 from LoggedInUserId import LOGINUSERID
 from flask_jwt_extended import (
     jwt_required,
@@ -74,17 +75,18 @@ class UserRegister(MethodView):
         return {"message": "User registered!"}
 
 
-@blp.route("/user/<int:user_id>")
+@blp.route("/user")
 class UserTesting(MethodView):
-    @jwt_required()
-    @blp.response(200, UserSchema)
-    def get(self, user_id):
-        user = UserModel.query.get_or_404(user_id)
-        return user
 
     @jwt_required()
-    def delete(self, user_id):
-        user = UserModel.query.get_or_404(user_id)
-        db.session.delete(user)
-        db.session.commit()
-        return {"message": "User Deleted"}, 200
+    def delete(self):
+        user = UserModel.query.get_or_404(LOGINUSERID[0])
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            jti = get_jwt()["jti"]
+            BLOCKLIST.add(jti)
+            LOGINUSERID.clear()
+            return {"message": "User Deleted"}, 200
+        else:
+            abort(400, message="User not deleted")
